@@ -147,6 +147,24 @@
 
   .site-footer { text-align: center; padding: 0 20px 40px; color: var(--text-muted); font-size: 0.85rem; }
   .site-footer a { color: var(--accent-solid); text-decoration: none; }
+
+  .waitlist-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .waitlist-form.hidden { display: none; }
+  .waitlist-form input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.9rem;
+  }
+  .waitlist-form button { flex-shrink: 0; padding: 10px 16px; font-size: 0.9rem; }
 </style>
 </head>
 <body>
@@ -226,6 +244,10 @@
         </ul>
         <button class="btn btn-primary plan-cta" id="upgrade-btn" type="button">Upgrade to Pro</button>
         <p class="modal-note" id="pricing-note" style="margin-top:10px;text-align:center;"></p>
+        <form class="waitlist-form hidden" id="waitlist-form">
+          <input type="email" id="waitlist-email" required placeholder="you@example.com" autocomplete="email">
+          <button type="submit" class="btn btn-primary" id="waitlist-submit">Notify me</button>
+        </form>
       </div>
     </section>
 

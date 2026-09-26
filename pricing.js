@@ -200,14 +200,17 @@
 
   // ---------- Billing toggle + plan cards ----------
   let billingCycle = 'monthly';
+  let stripeConfigured = false;
   const toggleBtn = $('billing-toggle-btn');
 
   function updatePlanCards() {
     const stripeCfg = window.STRIPE_CONFIG;
-    const stripeConfigured = stripeCfg
+    stripeConfigured = !!(stripeCfg
       && stripeCfg.publishableKey && !stripeCfg.publishableKey.includes('YOUR_STRIPE')
       && stripeCfg.prices && stripeCfg.prices.monthly && !stripeCfg.prices.monthly.includes('YOUR_STRIPE')
-      && stripeCfg.prices.yearly && !stripeCfg.prices.yearly.includes('YOUR_STRIPE');
+      && stripeCfg.prices.yearly && !stripeCfg.prices.yearly.includes('YOUR_STRIPE'));
+
+    if (!stripeConfigured) $('waitlist-form').classList.add('hidden');
 
     if (billingCycle === 'yearly') {
       $('pro-price').textContent = '$39';
@@ -222,9 +225,9 @@
     const upgradeBtn = $('upgrade-btn');
     const note = $('pricing-note');
     if (!stripeConfigured) {
-      upgradeBtn.textContent = 'Coming soon';
-      upgradeBtn.disabled = true;
-      note.textContent = 'Pro checkout isn’t live yet — check back soon.';
+      upgradeBtn.textContent = 'Notify me when Pro launches';
+      upgradeBtn.disabled = false;
+      note.textContent = 'Pro checkout isn’t live yet — leave your email and we’ll let you know.';
     } else if (isPro()) {
       upgradeBtn.textContent = 'Manage subscription';
       upgradeBtn.disabled = false;
@@ -294,6 +297,11 @@
   const upgradeBtn = $('upgrade-btn');
   if (upgradeBtn) {
     upgradeBtn.addEventListener('click', () => {
+      if (!stripeConfigured) {
+        $('waitlist-form').classList.toggle('hidden');
+        if (!$('waitlist-form').classList.contains('hidden')) $('waitlist-email').focus();
+        return;
+      }
       if (!supabaseClient) return;
       if (isPro()) {
         openBillingPortal();
@@ -305,6 +313,30 @@
         return;
       }
       startCheckout();
+    });
+  }
+
+  // ---------- Waitlist ("Notify me") ----------
+  const waitlistForm = $('waitlist-form');
+  if (waitlistForm) {
+    waitlistForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const note = $('pricing-note');
+      const email = $('waitlist-email').value.trim();
+      const submitBtn = $('waitlist-submit');
+      submitBtn.disabled = true;
+      try {
+        if (!supabaseClient) throw new Error('Not configured');
+        const { error } = await supabaseClient
+          .from('pro_waitlist')
+          .upsert({ email }, { onConflict: 'email', ignoreDuplicates: true });
+        if (error) throw error;
+        waitlistForm.classList.add('hidden');
+        note.textContent = 'Thanks! We’ll email you the moment Pro is live.';
+      } catch (err) {
+        submitBtn.disabled = false;
+        note.textContent = 'Something went wrong — please try again.';
+      }
     });
   }
 
