@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free QR Code & Barcode Generator Online</title>
+<meta name="description" content="Create free QR codes and barcodes instantly in your browser. Custom logos, Code128/EAN/UPC barcodes, PNG/SVG downloads — no account needed. Sign in free to unlock colorful gradient designs.">
+<meta name="keywords" content="qr code generator, free qr code, barcode generator, colorful qr code, qr code with logo, code128 generator, ean13 barcode, upc barcode generator">
+<link rel="canonical" href="https://ezyqrgen.com/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ezyqrgen.com/">
+<meta property="og:title" content="Free QR Code & Barcode Generator Online">
+<meta property="og:description" content="Create free QR codes and barcodes instantly in your browser. Custom logos and downloads as PNG or SVG — no account needed. Sign in free for colorful designs.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Free QR Code & Barcode Generator Online">
+<meta name="twitter:description" content="Create free QR codes and barcodes instantly in your browser — no account needed.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236366f1'/%3E%3Cstop offset='1' stop-color='%23ec4899'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Crect x='6' y='6' width='8' height='8' rx='2' fill='white'/%3E%3Crect x='18' y='6' width='8' height='8' rx='2' fill='white'/%3E%3Crect x='6' y='18' width='8' height='8' rx='2' fill='white'/%3E%3Crect x='19' y='19' width='6' height='6' rx='1.5' fill='white'/%3E%3C/svg%3E">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Free QR Code & Barcode Generator",
+  "url": "https://ezyqrgen.com/",
+  "description": "Create free QR codes and barcodes instantly in your browser. Custom logos, Code128/EAN/UPC barcodes, PNG/SVG downloads — no account needed. Sign in free to unlock colorful gradient designs.",
+  "applicationCategory": "Utility",
+  "operatingSystem": "Any (runs in browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('codeforge-theme');
+      if (saved === 'dark' || saved === 'light') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body>
+  <div class="bg-decor" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="30" height="30">
+            <rect x="2" y="2" width="10" height="10" rx="2.5"></rect>
+            <rect x="20" y="2" width="10" height="10" rx="2.5"></rect>
+            <rect x="2" y="20" width="10" height="10" rx="2.5"></rect>
+            <rect x="21.5" y="21.5" width="7" height="7" rx="1.5"></rect>
+          </svg>
+        </span>
+        <h1 class="brand-name">Free QR Code &amp; Barcode Generator</h1>
+      </div>
+      <div class="topbar-actions">
+        <div class="auth-area" id="auth-area">
+          <button class="btn-auth" id="auth-open-btn" type="button">Sign in</button>
+        </div>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle dark mode">
+          <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="4.5"></circle><g stroke-width="2" stroke-linecap="round"><line x1="12" y1="1.5" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22.5"></line><line x1="1.5" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22.5" y2="12"></line><line x1="4.6" y1="4.6" x2="6.3" y2="6.3"></line><line x1="17.7" y1="17.7" x2="19.4" y2="19.4"></line><line x1="4.6" y1="19.4" x2="6.3" y2="17.7"></line><line x1="17.7" y1="6.3" x2="19.4" y2="4.6"></line></g></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"></path></svg>
+        </button>
+      </div>
+    </div>
+    <p class="tagline">Generate QR codes and barcodes online — free and instant. Sign in free to unlock colorful designs.</p>
+  </header>
+
+  <main class="layout">
+    <section class="panel">
+      <div class="mode-switch" role="tablist">
+        <button class="mode-btn active" data-mode="qr" role="tab" aria-selected="true">QR Code</button>
+        <button class="mode-btn" data-mode="barcode" role="tab" aria-selected="false">Barcode</button>
+      </div>
+
+      <!-- QR CODE FORM -->
+      <div id="qr-panel" class="mode-panel active">
+        <div class="type-tabs" id="qr-type-tabs">
+          <button class="type-btn active" data-type="url">Website</button>
+          <button class="type-btn" data-type="text">Text</button>
+          <button class="type-btn" data-type="wifi">Wi-Fi</button>
+          <button class="type-btn" data-type="vcard">Contact</button>
+          <button class="type-btn" data-type="email">Email</button>
+          <button class="type-btn" data-type="sms">SMS</button>
+          <button class="type-btn" data-type="phone">Phone</button>
+        </div>
+
+        <div class="fields" id="qr-fields">
+          <!-- URL -->
+          <div class="field-group" data-for="url">
+            <label>Website URL</label>
+            <input type="url" id="qr-url" placeholder="https://example.com" value="https://example.com">
+          </div>
+          <!-- Text -->
+          <div class="field-group hidden" data-for="text">
+            <label>Text</label>
+            <textarea id="qr-text" rows="3" placeholder="Enter any text"></textarea>
+          </div>
+          <!-- WiFi -->
+          <div class="field-group hidden" data-for="wifi">
+            <label>Network name (SSID)</label>
+            <input type="text" id="wifi-ssid" placeholder="My WiFi">
+            <label>Password</label>
+            <input type="text" id="wifi-password" placeholder="password">
+            <label>Encryption</label>
+            <select id="wifi-encryption">
+              <option value="WPA">WPA/WPA2</option>
+              <option value="WEP">WEP</option>
+              <option value="nopass">None</option>
+            </select>
+            <label class="checkbox-label"><input type="checkbox" id="wifi-hidden"> Hidden network</label>
+          </div>
+          <!-- vCard -->
+          <div class="field-group hidden" data-for="vcard">
+            <label>Full name</label>
+            <input type="text" id="vcard-name" placeholder="Jane Doe">
+            <label>Phone</label>
+            <input type="text" id="vcard-phone" placeholder="+1 555 123 4567">
+            <label>Email</label>
+            <input type="email" id="vcard-email" placeholder="jane@example.com">
+            <label>Organization</label>
+            <input type="text" id="vcard-org" placeholder="Acme Inc.">
+            <label>Website</label>
+            <input type="url" id="vcard-url" placeholder="https://example.com">
+          </div>
+          <!-- Email -->
+          <div class="field-group hidden" data-for="email">
+            <label>To</label>
+            <input type="email" id="email-to" placeholder="someone@example.com">
+            <label>Subject</label>
+            <input type="text" id="email-subject" placeholder="Subject">
+            <label>Message</label>
+            <textarea id="email-body" rows="3" placeholder="Message body"></textarea>
+          </div>
+          <!-- SMS -->
+          <div class="field-group hidden" data-for="sms">
+            <label>Phone number</label>
+            <input type="text" id="sms-number" placeholder="+1 555 123 4567">
+            <label>Message</label>
+            <textarea id="sms-message" rows="3" placeholder="Message"></textarea>
+          </div>
+          <!-- Phone -->
+          <div class="field-group hidden" data-for="phone">
+            <label>Phone number</label>
+            <input type="text" id="phone-number" placeholder="+1 555 123 4567">
+          </div>
+        </div>
+
+        <div class="customize">
+          <h3>Customize</h3>
+
+          <label class="label-with-badge">Colorful presets <span class="lock-badge" id="presets-lock-badge">🔒 Sign in</span></label>
+          <div class="preset-row is-locked" id="qr-presets">
+            <button type="button" class="preset-swatch" data-preset="classic" style="background:#000000" title="Classic black"></button>
+            <button type="button" class="preset-swatch" data-preset="sunset" style="background:linear-gradient(135deg,#ff5f6d,#ffc371)" title="Sunset — sign in to use"></button>
+            <button type="button" class="preset-swatch" data-preset="ocean" style="background:linear-gradient(135deg,#00c6ff,#0072ff)" title="Ocean — sign in to use"></button>
+            <button type="button" class="preset-swatch" data-preset="berry" style="background:linear-gradient(135deg,#a445b2,#d41872)" title="Berry — sign in to use"></button>
+            <button type="button" class="preset-swatch" data-preset="forest" style="background:linear-gradient(135deg,#11998e,#38ef7d)" title="Forest — sign in to use"></button>
+            <button type="button" class="preset-swatch" data-preset="candy" style="background:linear-gradient(135deg,#ff9a9e,#fecfef)" title="Candy — sign in to use"></button>
+          </div>
+
+          <div class="customize-grid">
+            <div class="control">
+              <label>Dot pattern</label>
+              <select id="qr-dot-style">
+                <option value="square">Square</option>
+                <option value="dots">Dots</option>
+                <option value="rounded" selected>Rounded</option>
+                <option value="classy">Classy</option>
+                <option value="classy-rounded">Classy rounded</option>
+                <option value="extra-rounded">Extra rounded</option>
+              </select>
+            </div>
+            <div class="control">
+              <label class="label-with-badge">Color mode <span class="lock-badge" id="color-mode-lock-badge">🔒 Sign in</span></label>
+              <select id="qr-color-mode">
+                <option value="solid" selected>Solid color</option>
+                <option value="gradient" id="qr-gradient-option">Gradient (sign in)</option>
+              </select>
+            </div>
+
+            <div class="control" id="qr-fg-solid-control">
+              <label>Dot color</label>
+              <input type="color" id="qr-fg" value="#000000">
+            </div>
+            <div class="control hidden" id="qr-fg-gradient-type-control">
+              <label>Gradient shape</label>
+              <select id="qr-gradient-type">
+                <option value="linear" selected>Linear</option>
+                <option value="radial">Radial</option>
+              </select>
+            </div>
+            <div class="control hidden" id="qr-gradient-c1-control">
+              <label>Gradient color 1</label>
+              <input type="color" id="qr-gradient-c1" value="#ff5f6d">
+            </div>
+            <div class="control hidden" id="qr-gradient-c2-control">
+              <label>Gradient color 2</label>
+              <input type="color" id="qr-gradient-c2" value="#ffc371">
+            </div>
+            <div class="control hidden" id="qr-gradient-rotation-control">
+              <label>Gradient angle</label>
+              <input type="range" id="qr-gradient-rotation" min="0" max="360" step="5" value="45">
+              <span class="range-val" id="qr-gradient-rotation-val">45°</span>
+            </div>
+
+            <div class="control">
+              <label>Background</label>
+              <input type="color" id="qr-bg" value="#ffffff">
+            </div>
+            <div class="control">
+              <label>Size (px)</label>
+              <input type="range" id="qr-size" min="128" max="1024" step="32" value="320">
+              <span class="range-val" id="qr-size-val">320</span>
+            </div>
+            <div class="control">
+              <label>Error correction</label>
+              <select id="qr-ecl">
+                <option value="L">L — Low</option>
+                <option value="M" selected>M — Medium</option>
+                <option value="Q">Q — Quartile</option>
+                <option value="H">H — High (best with logo)</option>
+              </select>
+            </div>
+
+            <div class="control">
+              <label>Eye frame style</label>
+              <select id="qr-corner-square-style">
+                <option value="square">Square</option>
+                <option value="dot">Rounded</option>
+                <option value="extra-rounded" selected>Extra rounded</option>
+              </select>
+            </div>
+            <div class="control">
+              <label>Eye ball style</label>
+              <select id="qr-corner-dot-style">
+                <option value="square">Square</option>
+                <option value="dot" selected>Dot</option>
+              </select>
+            </div>
+
+            <div class="control span-2">
+              <label class="checkbox-label"><input type="checkbox" id="qr-corner-custom-color"> Use a different color for the eyes (corners) <span class="lock-badge" id="corner-lock-badge">🔒 Sign in</span></label>
+            </div>
+            <div class="control hidden" id="qr-corner-color-control">
+              <label>Eye color</label>
+              <input type="color" id="qr-corner-color" value="#1e3a8a">
+            </div>
+
+            <div class="control span-2">
+              <label>Upload image for center of QR code (optional)</label>
+              <div class="logo-upload-row">
+                <img id="qr-logo-preview" class="logo-preview hidden" alt="Logo preview">
+                <div class="logo-upload-controls">
+                  <input type="file" id="qr-logo" accept="image/*">
+                  <button class="mini-btn hidden" id="qr-logo-clear" type="button">Remove image</button>
+                </div>
+              </div>
+              <p class="hint" id="qr-logo-hint"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BARCODE FORM -->
+      <div id="barcode-panel" class="mode-panel">
+        <div class="fields">
+          <div class="field-group">
+            <label>Format</label>
+            <select id="barcode-format">
+              <option value="CODE128">Code 128</option>
+              <option value="CODE39">Code 39</option>
+              <option value="EAN13">EAN-13</option>
+              <option value="EAN8">EAN-8</option>
+              <option value="UPC">UPC-A</option>
+              <option value="ITF14">ITF-14</option>
+              <option value="MSI">MSI</option>
+              <option value="pharmacode">Pharmacode</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>Data</label>
+            <input type="text" id="barcode-value" placeholder="123456789012" value="123456789012">
+            <p class="hint" id="barcode-hint">Enter the value to encode. EAN/UPC require exact digit lengths.</p>
+          </div>
+        </div>
+
+        <div class="customize">
+          <h3>Customize</h3>
+          <div class="customize-grid">
+            <div class="control">
+              <label>Bar color</label>
+              <input type="color" id="barcode-fg" value="#000000">
+            </div>
+            <div class="control">
+              <label>Background</label>
+              <input type="color" id="barcode-bg" value="#ffffff">
+            </div>
+            <div class="control">
+              <label>Bar width</label>
+              <input type="range" id="barcode-width" min="1" max="4" step="0.5" value="2">
+              <span class="range-val" id="barcode-width-val">2</span>
+            </div>
+            <div class="control">
+              <label>Height (px)</label>
+              <input type="range" id="barcode-height" min="40" max="240" step="10" value="100">
+              <span class="range-val" id="barcode-height-val">100</span>
+            </div>
+            <div class="control">
+              <label class="checkbox-label"><input type="checkbox" id="barcode-show-text" checked> Show text</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="preview">
+      <div class="preview-card">
+        <div id="preview-surface" class="preview-surface">
+          <div id="qr-canvas-container"></div>
+          <svg id="barcode-svg" class="hidden"></svg>
+        </div>
+        <p class="error-msg" id="error-msg"></p>
+        <div class="download-row">
+          <button class="btn btn-primary" id="download-png">Download PNG</button>
+          <button class="btn" id="download-svg">Download SVG</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Runs entirely in your browser — nothing you enter is uploaded anywhere. Colorful presets require a free account.</p>
+  </footer>
+
+  <div class="modal-backdrop hidden" id="auth-modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+      <button class="modal-close" id="auth-modal-close" type="button" aria-label="Close">&times;</button>
+      <div class="modal-tabs">
+        <button class="modal-tab active" data-authtab="signin" type="button">Log in</button>
+        <button class="modal-tab" data-authtab="signup" type="button">Sign up</button>
+      </div>
+      <h2 id="auth-modal-title" class="modal-title">Unlock colorful QR codes</h2>
+      <p class="modal-subtitle">Sign in for free to use colorful presets, gradients, and custom eye colors.</p>
+
+      <button type="button" class="btn btn-google" id="auth-google-btn">
+        <svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true">
+          <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.71v2.26h2.9c1.7-1.57 2.7-3.88 2.7-6.61z"/>
+          <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.9-2.26c-.8.54-1.84.86-3.06.86-2.35 0-4.34-1.59-5.05-3.72H.96v2.33A9 9 0 0 0 9 18z"/>
+          <path fill="#FBBC05" d="M3.95 10.7A5.4 5.4 0 0 1 3.67 9c0-.59.1-1.16.28-1.7V4.97H.96A9 9 0 0 0 0 9c0 1.45.35 2.83.96 4.03l2.99-2.33z"/>
+          <path fill="#EA4335" d="M9 3.58c1.32 0 2.51.46 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0A9 9 0 0 0 .96 4.97l2.99 2.33C4.66 5.17 6.65 3.58 9 3.58z"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <div class="modal-divider"><span>or</span></div>
+
+      <form id="auth-form">
+        <label>Email</label>
+        <input type="email" id="auth-email" required placeholder="you@example.com" autocomplete="email">
+        <label>Password</label>
+        <input type="password" id="auth-password" required placeholder="At least 6 characters" autocomplete="current-password" minlength="6">
+        <p class="modal-error" id="auth-error"></p>
+        <p class="modal-note" id="auth-note"></p>
+        <button type="submit" class="btn btn-primary modal-submit" id="auth-submit-btn">Log in</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="logout-modal-backdrop">
+    <div class="modal modal-small" role="dialog" aria-modal="true" aria-labelledby="logout-modal-title">
+      <button class="modal-close" id="logout-modal-close" type="button" aria-label="Close">&times;</button>
+      <h2 id="logout-modal-title" class="modal-title">Log out?</h2>
+      <p class="modal-subtitle">You'll need to sign in again to use colorful presets, gradients, and custom eye colors.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn" id="logout-cancel-btn">Cancel</button>
+        <button type="button" class="btn btn-danger" id="logout-confirm-btn">Log out</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
