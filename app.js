@@ -241,6 +241,60 @@
   renderAuthArea();
   updateGateUI();
 
+  // ---------- Ads (Google AdSense) ----------
+  // The base AdSense library is loaded via a static <script> tag directly in
+  // <head> (see index.html/privacy.html) rather than injected here — Google's
+  // site-verification step checks for it in the raw page source, which a
+  // JS-injected tag might not satisfy. Consent instead gates the separate
+  // step of actually requesting/rendering an ad into a slot.
+  const adsCfg = window.ADSENSE_CONFIG;
+  const adsConfigured = adsCfg && adsCfg.publisherId && !adsCfg.publisherId.includes('YOUR_ADSENSE');
+
+  function renderAdUnits() {
+    Object.entries(adsCfg.slots || {}).forEach(([key, slotId]) => {
+      if (!slotId || slotId.includes('YOUR_AD_SLOT')) return;
+      const container = $$('ad-slot-' + key);
+      if (!container) return;
+      container.classList.remove('hidden');
+      container.innerHTML = `<ins class="adsbygoogle" style="display:block;width:100%;height:100%" data-ad-client="${adsCfg.publisherId}" data-ad-slot="${slotId}" data-ad-format="auto" data-full-width-responsive="true"></ins>`;
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    });
+  }
+
+  function initAds() {
+    if (!adsConfigured) return;
+
+    let consent;
+    try { consent = localStorage.getItem('ad-consent'); } catch (e) { consent = null; }
+
+    if (consent === 'rejected') return; // script present for verification, but no ads rendered
+    if (consent === 'accepted') {
+      renderAdUnits();
+    } else {
+      const banner = $$('consent-banner');
+      if (banner) banner.classList.remove('hidden');
+    }
+  }
+
+  const consentAcceptBtn = $$('consent-accept-btn');
+  if (consentAcceptBtn) {
+    consentAcceptBtn.addEventListener('click', () => {
+      try { localStorage.setItem('ad-consent', 'accepted'); } catch (e) {}
+      $$('consent-banner').classList.add('hidden');
+      renderAdUnits();
+    });
+  }
+
+  const consentRejectBtn = $$('consent-reject-btn');
+  if (consentRejectBtn) {
+    consentRejectBtn.addEventListener('click', () => {
+      try { localStorage.setItem('ad-consent', 'rejected'); } catch (e) {}
+      $$('consent-banner').classList.add('hidden');
+    });
+  }
+
+  initAds();
+
   // ---------- Theme toggle ----------
   const themeToggleBtn = document.getElementById('theme-toggle');
   if (themeToggleBtn) {
