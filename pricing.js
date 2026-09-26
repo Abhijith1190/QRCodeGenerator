@@ -327,10 +327,12 @@
       submitBtn.disabled = true;
       try {
         if (!supabaseClient) throw new Error('Not configured');
-        const { error } = await supabaseClient
-          .from('pro_waitlist')
-          .upsert({ email }, { onConflict: 'email', ignoreDuplicates: true });
-        if (error) throw error;
+        // Plain insert (not upsert): upsert defaults to requesting the row
+        // back, which Postgres RLS blocks since there's intentionally no
+        // SELECT policy (nobody but us should be able to read the list).
+        // A duplicate email (already on the list) is treated as success.
+        const { error } = await supabaseClient.from('pro_waitlist').insert({ email });
+        if (error && error.code !== '23505') throw error;
         waitlistForm.classList.add('hidden');
         note.textContent = 'Thanks! We’ll email you the moment Pro is live.';
       } catch (err) {
