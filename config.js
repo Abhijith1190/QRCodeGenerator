@@ -29,3 +29,19 @@ window.ADSENSE_CONFIG = {
     bonus: 'YOUR_AD_SLOT_ID_BONUS',
   },
 };
+
+// Fill these in once you've created a Stripe account and a "Pro" product.
+//   Stripe dashboard -> Developers -> API keys -> Publishable key (starts pk_).
+//   Stripe dashboard -> Product catalog -> create a "Pro" product with two
+//   recurring Prices (monthly + yearly), then paste each Price's ID
+//   (looks like: price_1AbCdEfGhIjKlMnOp).
+//
+// Until these are filled in, the Pricing page shows the plans but the
+// "Upgrade to Pro" buttons stay disabled.
+window.STRIPE_CONFIG = {
+  publishableKey: 'YOUR_STRIPE_PUBLISHABLE_KEY',
+  prices: {
+    monthly: 'YOUR_STRIPE_PRICE_ID_MONTHLY',
+    yearly: 'YOUR_STRIPE_PRICE_ID_YEARLY',
+  },
+};

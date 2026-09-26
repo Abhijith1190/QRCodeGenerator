@@ -1,9 +1,9 @@
 (() => {
   // ---------- Auth (Supabase) ----------
   // Colorful presets, gradients, and custom eye colors require a signed-in
-  // user. Everything else (plain QR/barcode generation, downloads, manual
-  // dot/eye shapes, solid colors) stays free for everyone.
-  const authState = { user: null, ready: false };
+  // (free) account. Pro subscribers additionally get no watermark, no ads,
+  // unlimited generations, and vector SVG export — see pricing.html.
+  const authState = { user: null, ready: false, plan: 'free' };
 
   let supabaseClient = null;
   const cfg = window.SUPABASE_CONFIG;
@@ -15,14 +15,38 @@
     return !!authState.user;
   }
 
+  // Pro (paid) status is looked up from the profiles table, which is only
+  // ever written by the Stripe webhook — never trust a client-side flag.
+  function isPro() {
+    return isAuthed() && authState.plan === 'pro';
+  }
+
+  async function refreshProfilePlan() {
+    if (!supabaseClient || !authState.user) {
+      authState.plan = 'free';
+      return;
+    }
+    try {
+      const { data } = await supabaseClient
+        .from('profiles')
+        .select('plan')
+        .eq('id', authState.user.id)
+        .single();
+      authState.plan = (data && data.plan) || 'free';
+    } catch (e) {
+      authState.plan = 'free';
+    }
+  }
+
   function $$(id) { return document.getElementById(id); }
 
   function renderAuthArea() {
     const area = $$('auth-area');
     if (!area) return;
     if (isAuthed()) {
+      const badge = isPro() ? '<span class="pro-badge">PRO</span>' : '';
       area.innerHTML = `
-        <span class="auth-user" title="${authState.user.email}">${authState.user.email}</span>
+        <span class="auth-user" title="${authState.user.email}">${authState.user.email}${badge}</span>
         <button class="btn-auth" id="auth-logout-btn" type="button">Log out</button>
       `;
       $$('auth-logout-btn').addEventListener('click', () => openLogoutModal());
@@ -34,14 +58,19 @@
 
   function updateGateUI() {
     const authed = isAuthed();
+    const pro = isPro();
 
-    document.querySelectorAll('.lock-badge').forEach((b) => b.classList.toggle('hidden', authed));
+    document.querySelectorAll('.lock-badge:not(.pro-lock-badge)').forEach((b) => b.classList.toggle('hidden', authed));
+    document.querySelectorAll('.pro-lock-badge').forEach((b) => b.classList.toggle('hidden', pro));
 
     const presetRow = $$('qr-presets');
     if (presetRow) presetRow.classList.toggle('is-locked', !authed);
 
     const gradientOption = $$('qr-gradient-option');
     if (gradientOption) gradientOption.textContent = authed ? 'Gradient' : 'Gradient (sign in)';
+
+    const upsellNote = $$('pro-upsell-note');
+    if (upsellNote) upsellNote.classList.toggle('hidden', pro);
   }
 
   function onAuthChanged() {
@@ -50,6 +79,7 @@
 
     if (!isAuthed()) {
       // Logged out: fall back any active premium styling to the free defaults.
+      authState.plan = 'free';
       const colorModeEl = $$('qr-color-mode');
       const cornerCustomEl = $$('qr-corner-custom-color');
       if (colorModeEl && colorModeEl.value === 'gradient') {
@@ -63,6 +93,12 @@
     }
 
     if (typeof render === 'function') render();
+
+    refreshProfilePlan().then(() => {
+      renderAuthArea();
+      updateGateUI();
+      if (typeof render === 'function') render();
+    });
   }
 
   // ---------- Auth modal ----------
@@ -215,6 +251,7 @@
 
   async function checkRateLimitAndMaybeShowAd() {
     if (!supabaseClient) return; // not configured — fail open, no limit enforced
+    if (isPro()) return; // Pro subscribers have unlimited generations
     try {
       const { data, error } = await supabaseClient.functions.invoke('check-rate-limit');
       if (!error && data && data.showAd) {
@@ -603,6 +640,7 @@
   // and only let downloads proceed — once that promise has resolved.
   let qrRenderToken = 0;
   let qrRenderPromise = Promise.resolve();
+  let currentQrInstance = null; // kept for Pro's true-vector SVG export
 
   async function renderQr() {
     const token = ++qrRenderToken;
@@ -648,6 +686,7 @@
       });
       qrContainer.innerHTML = '';
       qr.append(qrContainer);
+      currentQrInstance = qr;
 
       // Waiting on getRawData resolves only after the canvas pixels are
       // actually painted, since the constructor's own drawing is async.
@@ -667,10 +706,10 @@
     }
   }
 
-  // Free (signed-out) generations get a small "EzyQRGen.com" credit strip
-  // below the code. Signing in removes it (same gate as colorful presets).
+  // Non-Pro generations get a small "EzyQRGen.com" credit strip below the
+  // code. Upgrading to Pro removes it.
   function addWatermarkIfFree(canvas, size, bg) {
-    if (isAuthed()) return;
+    if (isPro()) return;
 
     const footerHeight = Math.max(26, Math.round(size * 0.09));
     const newHeight = size + footerHeight;
@@ -851,9 +890,12 @@
 
   $('download-svg').addEventListener('click', async () => {
     if (state.mode === 'qr') {
+      if (!isPro()) {
+        window.location.href = 'pricing.html';
+        return;
+      }
       await qrRenderPromise;
-      const canvas = getQrCanvas();
-      if (canvas) canvasToSvgDownload(canvas, 'qrcode.svg');
+      if (currentQrInstance) currentQrInstance.download({ name: 'qrcode', extension: 'svg' });
     } else {
       downloadSvg(barcodeSvg, 'barcode.svg');
     }
@@ -902,22 +944,6 @@
       downloadCanvasPng(canvas, filename);
     };
     img.src = url;
-  }
-
-  function canvasToSvgDownload(canvas, filename) {
-    const dataUrl = canvas.toDataURL('image/png');
-    const w = canvas.width;
-    const h = canvas.height;
-    const svgStr = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
-      <image href="${dataUrl}" width="${w}" height="${h}"/>
-    </svg>`;
-    const blob = new Blob([svgStr], { type: 'image/svg+xml' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.download = filename;
-    link.href = url;
-    link.click();
-    URL.revokeObjectURL(url);
   }
 
   // Initial render

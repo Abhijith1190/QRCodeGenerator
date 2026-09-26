@@ -5,6 +5,9 @@
 // atomically increments that IP's counter for the current hour, and
 // reports whether this request is past the free limit.
 //
+// Signed-in Pro subscribers are exempt (unlimited generations) — checked
+// server-side against the profiles table, not trusted from the client.
+//
 // Deploy with the Supabase CLI from the project root:
 //   supabase functions deploy check-rate-limit
 // (No extra secrets to set — SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY
@@ -25,15 +28,35 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const ip =
-      req.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
-      req.headers.get('cf-connecting-ip') ||
-      'unknown';
-
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
     );
+
+    const authHeader = req.headers.get('Authorization');
+    if (authHeader) {
+      const { data: { user } } = await supabaseAdmin.auth.getUser(
+        authHeader.replace('Bearer ', ''),
+      );
+      if (user) {
+        const { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('plan')
+          .eq('id', user.id)
+          .single();
+        if (profile?.plan === 'pro') {
+          return new Response(
+            JSON.stringify({ count: 0, showAd: false, limit: null, pro: true }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+          );
+        }
+      }
+    }
+
+    const ip =
+      req.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
+      req.headers.get('cf-connecting-ip') ||
+      'unknown';
 
     const { data: count, error } = await supabaseAdmin.rpc('increment_ip_generation_count', {
       p_ip: ip,
