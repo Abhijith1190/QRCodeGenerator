@@ -656,14 +656,53 @@
 
       setError('');
 
-      if (state.logoImage) {
-        const canvas = getQrCanvas();
-        if (canvas) drawLogoOnCanvas(canvas, state.logoImage, size, bg);
+      const canvas = getQrCanvas();
+      if (state.logoImage && canvas) {
+        drawLogoOnCanvas(canvas, state.logoImage, size, bg);
       }
+      if (canvas) addWatermarkIfFree(canvas, size, bg);
     } catch (err) {
       if (token !== qrRenderToken) return;
       setError(err.message || 'Could not generate QR code with this data.');
     }
+  }
+
+  // Free (signed-out) generations get a small "EzyQRGen.com" credit strip
+  // below the code. Signing in removes it (same gate as colorful presets).
+  function addWatermarkIfFree(canvas, size, bg) {
+    if (isAuthed()) return;
+
+    const footerHeight = Math.max(26, Math.round(size * 0.09));
+    const newHeight = size + footerHeight;
+
+    const snapshot = document.createElement('canvas');
+    snapshot.width = size;
+    snapshot.height = size;
+    snapshot.getContext('2d').drawImage(canvas, 0, 0);
+
+    canvas.width = size;
+    canvas.height = newHeight;
+
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, size, newHeight);
+    ctx.drawImage(snapshot, 0, 0);
+
+    ctx.fillStyle = getWatermarkTextColor(bg);
+    ctx.font = `600 ${Math.round(footerHeight * 0.42)}px Inter, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('EzyQRGen.com', size / 2, size + footerHeight / 2);
+  }
+
+  function getWatermarkTextColor(hex) {
+    const c = (hex || '#ffffff').replace('#', '');
+    if (c.length !== 6) return '#6b7280';
+    const r = parseInt(c.slice(0, 2), 16);
+    const g = parseInt(c.slice(2, 4), 16);
+    const b = parseInt(c.slice(4, 6), 16);
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.6 ? '#6b7280' : '#d1d5db';
   }
 
   function drawLogoOnCanvas(canvas, img, size, bg) {
