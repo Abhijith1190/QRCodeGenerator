@@ -598,6 +598,15 @@ input[type="range"] {
   padding: 24px 20px 40px;
 }
 
+.footer a {
+  color: var(--text-muted);
+  text-decoration: underline;
+}
+
+.footer a:hover {
+  color: var(--accent-solid);
+}
+
 /* ---------- Auth gating: lock badges + locked controls ---------- */
 
 .label-with-badge {
