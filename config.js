@@ -13,9 +13,11 @@ window.SUPABASE_CONFIG = {
 // Fill these in once your Google AdSense account is approved.
 //   publisherId: AdSense dashboard -> Account -> Account information -> Publisher ID.
 //                Looks like: ca-pub-1234567890123456
-//   slots.top / slots.sidebar: create a "Display ad" unit for each in
-//                AdSense dashboard -> Ads -> By ad unit, then paste in its
-//                Ad slot ID (looks like: 1234567890).
+//   slots.top / slots.sidebar / slots.bonus: create a "Display ad" unit for
+//                each in AdSense dashboard -> Ads -> By ad unit, then paste
+//                in its Ad slot ID (looks like: 1234567890).
+//                "bonus" is shown in the popup after someone's 3 free
+//                generations per hour run out (see supabase/functions/).
 //
 // Until publisherId is filled in, no ad script is loaded and the consent
 // banner stays hidden — the site works exactly as it does today.
@@ -24,5 +26,6 @@ window.ADSENSE_CONFIG = {
   slots: {
     top: 'YOUR_AD_SLOT_ID_TOP',
     sidebar: 'YOUR_AD_SLOT_ID_SIDEBAR',
+    bonus: 'YOUR_AD_SLOT_ID_BONUS',
   },
 };

@@ -591,6 +591,18 @@ input[type="range"] {
   border-color: transparent;
 }
 
+.btn-generate {
+  width: 100%;
+  margin-top: 22px;
+  padding: 14px;
+  font-size: 1rem;
+}
+
+.btn-generate-top {
+  margin-top: 6px;
+  margin-bottom: 22px;
+}
+
 .footer {
   text-align: center;
   color: var(--text-muted);

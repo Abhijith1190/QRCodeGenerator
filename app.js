@@ -145,6 +145,86 @@
     });
   }
 
+  // ---------- Per-IP hourly rate limit + bonus ad ----------
+  // The actual counting happens server-side (a Supabase Edge Function backed
+  // by a Postgres table keyed on the caller's real IP) since a static site
+  // has no trustworthy way to see or track IPs on its own — anything done
+  // purely in the browser could be bypassed by clearing localStorage or
+  // just using a different browser. This call is fire-and-forget: it never
+  // blocks or delays actually generating the code.
+  function showBonusAdModal() {
+    const backdrop = $$('bonus-ad-modal-backdrop');
+    if (!backdrop) return;
+
+    const slotEl = $$('ad-slot-bonus');
+    const fallbackNote = $$('bonus-ad-fallback-note');
+    const cfg = window.ADSENSE_CONFIG;
+
+    let consent;
+    try { consent = localStorage.getItem('ad-consent'); } catch (e) { consent = null; }
+
+    const bonusSlotId = cfg && cfg.slots && cfg.slots.bonus;
+    const canShowRealAd =
+      cfg && cfg.publisherId && !cfg.publisherId.includes('YOUR_ADSENSE') &&
+      consent === 'accepted' &&
+      bonusSlotId && !bonusSlotId.includes('YOUR_AD_SLOT');
+
+    // Ad delivery is inherently unreliable (ad blockers, invalid slots,
+    // network hiccups) — a thrown error here must never prevent the modal
+    // itself from opening, so the ad attempt is isolated in its own catch.
+    let adShown = false;
+    if (canShowRealAd) {
+      try {
+        slotEl.classList.remove('hidden');
+        slotEl.innerHTML = `<ins class="adsbygoogle" style="display:block;width:100%;height:100%" data-ad-client="${cfg.publisherId}" data-ad-slot="${bonusSlotId}" data-ad-format="auto" data-full-width-responsive="true"></ins>`;
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        adShown = true;
+      } catch (e) {
+        adShown = false;
+      }
+    }
+
+    if (adShown) {
+      fallbackNote.classList.add('hidden');
+    } else {
+      slotEl.classList.add('hidden');
+      slotEl.innerHTML = '';
+      fallbackNote.classList.remove('hidden');
+    }
+
+    backdrop.classList.remove('hidden');
+  }
+
+  function closeBonusAdModal() {
+    const backdrop = $$('bonus-ad-modal-backdrop');
+    if (backdrop) backdrop.classList.add('hidden');
+  }
+
+  const bonusAdCloseBtn = $$('bonus-ad-modal-close');
+  if (bonusAdCloseBtn) bonusAdCloseBtn.addEventListener('click', closeBonusAdModal);
+
+  const bonusAdContinueBtn = $$('bonus-ad-continue-btn');
+  if (bonusAdContinueBtn) bonusAdContinueBtn.addEventListener('click', closeBonusAdModal);
+
+  const bonusAdModalBackdrop = $$('bonus-ad-modal-backdrop');
+  if (bonusAdModalBackdrop) {
+    bonusAdModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === bonusAdModalBackdrop) closeBonusAdModal();
+    });
+  }
+
+  async function checkRateLimitAndMaybeShowAd() {
+    if (!supabaseClient) return; // not configured — fail open, no limit enforced
+    try {
+      const { data, error } = await supabaseClient.functions.invoke('check-rate-limit');
+      if (!error && data && data.showAd) {
+        showBonusAdModal();
+      }
+    } catch (e) {
+      // Network hiccup or function not deployed yet — fail open silently.
+    }
+  }
+
   const authGoogleBtn = $$('auth-google-btn');
   if (authGoogleBtn) {
     authGoogleBtn.addEventListener('click', async () => {
@@ -252,12 +332,21 @@
 
   function renderAdUnits() {
     Object.entries(adsCfg.slots || {}).forEach(([key, slotId]) => {
+      // "bonus" lives inside a modal that's hidden until the rate-limit
+      // popup fires — requesting an ad into a hidden element violates
+      // AdSense policy, so showBonusAdModal() renders it separately, only
+      // once the modal (and slot) are actually visible.
+      if (key === 'bonus') return;
       if (!slotId || slotId.includes('YOUR_AD_SLOT')) return;
       const container = $$('ad-slot-' + key);
       if (!container) return;
-      container.classList.remove('hidden');
-      container.innerHTML = `<ins class="adsbygoogle" style="display:block;width:100%;height:100%" data-ad-client="${adsCfg.publisherId}" data-ad-slot="${slotId}" data-ad-format="auto" data-full-width-responsive="true"></ins>`;
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      try {
+        container.classList.remove('hidden');
+        container.innerHTML = `<ins class="adsbygoogle" style="display:block;width:100%;height:100%" data-ad-client="${adsCfg.publisherId}" data-ad-slot="${slotId}" data-ad-format="auto" data-full-width-responsive="true"></ins>`;
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        // One bad/blocked slot shouldn't stop the others from rendering.
+      }
     });
   }
 
@@ -339,7 +428,6 @@
       $('barcode-panel').classList.toggle('active', state.mode === 'barcode');
       qrContainer.classList.toggle('hidden', state.mode !== 'qr');
       barcodeSvg.classList.toggle('hidden', state.mode !== 'barcode');
-      render();
     });
   });
 
@@ -351,7 +439,6 @@
       document.querySelectorAll('#qr-fields .field-group').forEach((fg) => {
         fg.classList.toggle('hidden', fg.dataset.for !== state.qrType);
       });
-      render();
     });
   });
 
@@ -467,8 +554,6 @@
     document.querySelectorAll('#qr-presets .preset-swatch').forEach((b) => {
       b.classList.toggle('active', b.dataset.preset === name);
     });
-
-    render();
   }
 
   document.querySelectorAll('#qr-presets .preset-swatch').forEach((btn) => {
@@ -501,9 +586,8 @@
       return;
     }
     toggleColorModeControls();
-    render();
   });
-  $('qr-gradient-type').addEventListener('change', () => { toggleColorModeControls(); render(); });
+  $('qr-gradient-type').addEventListener('change', () => { toggleColorModeControls(); });
   $('qr-corner-custom-color').addEventListener('change', () => {
     if ($('qr-corner-custom-color').checked && !isAuthed()) {
       $('qr-corner-custom-color').checked = false;
@@ -511,7 +595,6 @@
       return;
     }
     toggleCornerColorControl();
-    render();
   });
 
   // ---------- QR rendering ----------
@@ -634,8 +717,6 @@
       $('qr-logo-preview').classList.remove('hidden');
       $('qr-logo-clear').classList.remove('hidden');
       $('qr-logo-hint').textContent = 'Error correction was raised to High so the code still scans with the image on top.';
-
-      render();
     };
     img.src = URL.createObjectURL(file);
   });
@@ -651,7 +732,6 @@
       $('qr-ecl').value = state.previousEcl;
       state.previousEcl = null;
     }
-    render();
   });
 
   // ---------- Barcode rendering ----------
@@ -710,10 +790,14 @@
     }
   }
 
-  document.querySelectorAll('#qr-panel input, #qr-panel textarea, #qr-panel select')
-    .forEach((el) => el.addEventListener('input', render));
-  document.querySelectorAll('#barcode-panel input, #barcode-panel select')
-    .forEach((el) => el.addEventListener('input', render));
+  // Generation only happens when the user explicitly clicks Generate —
+  // editing fields/colors/styles just updates the form until then.
+  function handleGenerateClick() {
+    render(); // always immediate — never blocked by the rate-limit check
+    checkRateLimitAndMaybeShowAd(); // fire-and-forget; may pop the bonus-ad modal
+  }
+  $('qr-generate-btn').addEventListener('click', handleGenerateClick);
+  $('barcode-generate-btn').addEventListener('click', handleGenerateClick);
 
   // ---------- Downloads ----------
   $('download-png').addEventListener('click', async () => {

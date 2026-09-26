@@ -154,6 +154,8 @@
           </div>
         </div>
 
+        <button type="button" class="btn btn-primary btn-generate btn-generate-top" id="qr-generate-btn">Generate QR Code</button>
+
         <div class="customize">
           <h3>Customize</h3>
 
@@ -293,8 +295,11 @@
           </div>
         </div>
 
+        <button type="button" class="btn btn-primary btn-generate btn-generate-top" id="barcode-generate-btn">Generate Barcode</button>
+
         <div class="customize">
           <h3>Customize</h3>
+
           <div class="customize-grid">
             <div class="control">
               <label>Bar color</label>
@@ -387,6 +392,17 @@
         <button type="button" class="btn" id="logout-cancel-btn">Cancel</button>
         <button type="button" class="btn btn-danger" id="logout-confirm-btn">Log out</button>
       </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="bonus-ad-modal-backdrop">
+    <div class="modal modal-small" role="dialog" aria-modal="true" aria-labelledby="bonus-ad-modal-title">
+      <button class="modal-close" id="bonus-ad-modal-close" type="button" aria-label="Close">&times;</button>
+      <h2 id="bonus-ad-modal-title" class="modal-title">Thanks for generating so many codes!</h2>
+      <p class="modal-subtitle">You've used your 3 free generations this hour. Here's a quick ad to keep the site free — your QR code is generating below.</p>
+      <div class="ad-slot ad-slot-rectangle hidden" id="ad-slot-bonus" data-ad-slot="bonus"></div>
+      <p class="modal-note" id="bonus-ad-fallback-note">Enjoying the tool? Consider signing in for colorful designs, or just carry on — no strings attached.</p>
+      <button type="button" class="btn btn-primary modal-submit" id="bonus-ad-continue-btn">Continue</button>
     </div>
   </div>
 
