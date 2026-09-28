@@ -108,28 +108,64 @@ body {
 }
 
 .topbar {
-  padding: 28px 24px 18px;
-  text-align: center;
+  position: sticky;
+  top: 0;
+  /* Above page content so the profile dropdown floats, below the modal
+     layer (100) so dialogs still cover it. */
+  z-index: 80;
+  padding: 12px 24px;
+  /* A permanent hairline rather than a scroll-triggered one, so the bar needs
+     no JS on the eight pages that share it. */
+  border-bottom: 1px solid var(--border-soft);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .topbar-inner {
-  max-width: 1080px;
+  max-width: 1120px;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: center;
-  position: relative;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.topnav a {
+  padding: 8px 12px;
+  border-radius: 9px;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.topnav a:hover { background: var(--surface-alt); color: var(--text); }
+.topnav a.current { color: var(--accent-solid); }
+
+@media (max-width: 720px) {
+  .topnav { display: none; }
 }
 
 .brand {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
+  gap: 9px;
+  flex-shrink: 0;
   font-family: "Plus Jakarta Sans", "Inter", sans-serif;
-  font-size: 1.55rem;
+  font-size: 1.22rem;
   font-weight: 800;
   letter-spacing: -0.02em;
+  text-decoration: none;
+  color: var(--text);
 }
 
 .brand-icon {
@@ -151,28 +187,15 @@ body {
 }
 
 .topbar-actions {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  /* The transform above creates a stacking context, which would otherwise trap
-     the profile dropdown behind <main>. Kept below the modal/consent layers. */
-  z-index: 60;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 @media (max-width: 560px) {
-  .topbar-inner {
-    flex-direction: column;
-    gap: 14px;
-  }
-  .brand { font-size: 1.3rem; }
-  .topbar-actions {
-    position: static;
-    transform: none;
-  }
+  .brand { font-size: 1.05rem; }
+  .topbar { padding: 10px 16px; }
 }
 
 .auth-area {
@@ -1206,3 +1229,73 @@ input[type="range"] {
 
 .cz-panel { display: none; }
 .cz-panel.active { display: block; }
+
+/* ---------- Homepage hero ---------- */
+.hero {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 34px 20px 22px;
+  text-align: center;
+}
+
+.hero h1 {
+  margin: 0 0 14px;
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: clamp(1.75rem, 4.4vw, 2.85rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.hero h1 .grad {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-sub {
+  margin: 0 auto;
+  max-width: 560px;
+  color: var(--text-muted);
+  font-size: clamp(0.95rem, 1.7vw, 1.08rem);
+  line-height: 1.55;
+}
+
+.hero-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+}
+
+.hero-chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.hero-chips li::before {
+  content: "✓";
+  color: #16a34a;
+  font-weight: 800;
+}
+
+@media (max-width: 560px) {
+  .hero { padding: 20px 18px 14px; }
+  .hero h1 { margin-bottom: 10px; }
+  .hero-sub { font-size: 0.92rem; line-height: 1.5; }
+  .hero-chips { gap: 6px; margin-top: 14px; }
+  .hero-chips li { padding: 5px 10px; font-size: 0.74rem; }
+}
