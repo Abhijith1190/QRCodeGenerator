@@ -245,6 +245,12 @@
             <button type="button" class="preset-swatch" data-preset="berry" style="background:linear-gradient(135deg,#a445b2,#d41872)" title="Berry — sign in to use"></button>
             <button type="button" class="preset-swatch" data-preset="forest" style="background:linear-gradient(135deg,#11998e,#38ef7d)" title="Forest — sign in to use"></button>
             <button type="button" class="preset-swatch" data-preset="candy" style="background:linear-gradient(135deg,#ff9a9e,#fecfef)" title="Candy — sign in to use"></button>
+            <button type="button" class="preset-swatch" data-preset="midnight" style="background:linear-gradient(135deg,#1e3a8a,#7c3aed)" title="Midnight — sign in to use"></button>
+            <button type="button" class="preset-swatch" data-preset="gold" style="background:linear-gradient(135deg,#f59e0b,#b45309)" title="Gold — sign in to use"></button>
+            <button type="button" class="preset-swatch" data-preset="mint" style="background:linear-gradient(135deg,#06b6d4,#34d399)" title="Mint — sign in to use"></button>
+            <button type="button" class="preset-swatch" data-preset="rose" style="background:linear-gradient(135deg,#f43f5e,#be123c)" title="Rose — sign in to use"></button>
+            <button type="button" class="preset-swatch" data-preset="slate" style="background:#334155" title="Slate — sign in to use"></button>
+            <button type="button" class="preset-swatch" data-preset="neon" style="background:linear-gradient(135deg,#22c55e,#06b6d4)" title="Neon — sign in to use"></button>
           </div>
 
           <div class="customize-grid">
@@ -333,6 +339,24 @@
             <div class="control hidden" id="qr-corner-color-control">
               <label>Eye color</label>
               <input type="color" id="qr-corner-color" value="#1e3a8a">
+            </div>
+
+            <div class="control">
+              <label>Frame</label>
+              <select id="qr-frame-style">
+                <option value="none" selected>None</option>
+                <option value="border">Simple border</option>
+                <option value="label-below">Label below</option>
+                <option value="label-above">Label above</option>
+              </select>
+            </div>
+            <div class="control hidden" id="qr-frame-color-control">
+              <label>Frame color</label>
+              <input type="color" id="qr-frame-color" value="#111827">
+            </div>
+            <div class="control span-2 hidden" id="qr-frame-text-control">
+              <label>Frame label</label>
+              <input type="text" id="qr-frame-text" value="SCAN ME" maxlength="24">
             </div>
 
             <div class="control span-2">

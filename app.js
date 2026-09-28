@@ -630,6 +630,15 @@
     $('qr-corner-color-control').classList.toggle('hidden', !$('qr-corner-custom-color').checked);
   }
 
+  function toggleFrameControls() {
+    const style = $('qr-frame-style').value;
+    $('qr-frame-color-control').classList.toggle('hidden', style === 'none');
+    $('qr-frame-text-control').classList.toggle('hidden', style !== 'label-below' && style !== 'label-above');
+  }
+
+  $('qr-frame-style').addEventListener('change', toggleFrameControls);
+  toggleFrameControls();
+
   const PRESETS = {
     classic: { mode: 'solid', fg: '#000000', dotStyle: 'square', cornerSquare: 'square', cornerDot: 'square', cornerCustom: false },
     sunset: { mode: 'gradient', gradientType: 'linear', c1: '#ff5f6d', c2: '#ffc371', rotation: 45, dotStyle: 'rounded', cornerSquare: 'extra-rounded', cornerDot: 'dot', cornerCustom: false },
@@ -637,6 +646,12 @@
     berry: { mode: 'gradient', gradientType: 'radial', c1: '#a445b2', c2: '#d41872', rotation: 0, dotStyle: 'classy-rounded', cornerSquare: 'extra-rounded', cornerDot: 'dot', cornerCustom: false },
     forest: { mode: 'gradient', gradientType: 'linear', c1: '#11998e', c2: '#38ef7d', rotation: 45, dotStyle: 'extra-rounded', cornerSquare: 'extra-rounded', cornerDot: 'dot', cornerCustom: false },
     candy: { mode: 'gradient', gradientType: 'linear', c1: '#ff9a9e', c2: '#fecfef', rotation: 90, dotStyle: 'classy', cornerSquare: 'square', cornerDot: 'square', cornerCustom: true, cornerColor: '#c2185b' },
+    midnight: { mode: 'gradient', gradientType: 'linear', c1: '#1e3a8a', c2: '#7c3aed', rotation: 45, dotStyle: 'dots', cornerSquare: 'extra-rounded', cornerDot: 'dot', cornerCustom: false },
+    gold: { mode: 'gradient', gradientType: 'linear', c1: '#f59e0b', c2: '#b45309', rotation: 135, dotStyle: 'classy-rounded', cornerSquare: 'square', cornerDot: 'square', cornerCustom: false },
+    mint: { mode: 'gradient', gradientType: 'radial', c1: '#06b6d4', c2: '#34d399', rotation: 0, dotStyle: 'extra-rounded', cornerSquare: 'extra-rounded', cornerDot: 'dot', cornerCustom: false },
+    rose: { mode: 'gradient', gradientType: 'linear', c1: '#f43f5e', c2: '#be123c', rotation: 90, dotStyle: 'rounded', cornerSquare: 'square', cornerDot: 'dot', cornerCustom: true, cornerColor: '#881337' },
+    slate: { mode: 'solid', fg: '#334155', dotStyle: 'classy', cornerSquare: 'square', cornerDot: 'square', cornerCustom: false },
+    neon: { mode: 'gradient', gradientType: 'linear', c1: '#22c55e', c2: '#06b6d4', rotation: 45, dotStyle: 'square', cornerSquare: 'dot', cornerDot: 'dot', cornerCustom: false },
   };
 
   function applyPreset(name) {
@@ -815,7 +830,10 @@
       if (state.logoImage && canvas) {
         drawLogoOnCanvas(canvas, state.logoImage, size, bg);
       }
-      if (canvas) addWatermarkIfFree(canvas, size, bg);
+      // Order matters: the frame wraps the code, and the credit strip then
+      // sits underneath the whole thing.
+      if (canvas) applyFrame(canvas, bg);
+      if (canvas) addWatermarkIfFree(canvas, bg);
     } catch (err) {
       if (token !== qrRenderToken) return;
       setError(err.message || 'Could not generate QR code with this data.');
@@ -823,31 +841,119 @@
   }
 
   // Non-Pro generations get a small "EzyQRGen.com" credit strip below the
-  // code. Upgrading to Pro removes it.
-  function addWatermarkIfFree(canvas, size, bg) {
+  // code. Upgrading to Pro removes it. Reads the canvas's own dimensions
+  // rather than the configured QR size, since a frame may have grown it.
+  function addWatermarkIfFree(canvas, bg) {
     if (isPro()) return;
 
-    const footerHeight = Math.max(26, Math.round(size * 0.09));
-    const newHeight = size + footerHeight;
+    const w = canvas.width;
+    const h = canvas.height;
+    const footerHeight = Math.max(26, Math.round(w * 0.09));
 
     const snapshot = document.createElement('canvas');
-    snapshot.width = size;
-    snapshot.height = size;
+    snapshot.width = w;
+    snapshot.height = h;
     snapshot.getContext('2d').drawImage(canvas, 0, 0);
 
-    canvas.width = size;
-    canvas.height = newHeight;
+    canvas.width = w;
+    canvas.height = h + footerHeight;
 
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, size, newHeight);
+    ctx.fillRect(0, 0, w, h + footerHeight);
     ctx.drawImage(snapshot, 0, 0);
 
     ctx.fillStyle = getWatermarkTextColor(bg);
     ctx.font = `600 ${Math.round(footerHeight * 0.42)}px Inter, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('EzyQRGen.com', size / 2, size + footerHeight / 2);
+    ctx.fillText('EzyQRGen.com', w / 2, h + footerHeight / 2);
+  }
+
+  function roundRectPath(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    if (ctx.roundRect) {
+      ctx.roundRect(x, y, w, h, r);
+      return;
+    }
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function contrastTextOn(hex) {
+    const c = (hex || '#000000').replace('#', '');
+    if (c.length !== 6) return '#ffffff';
+    const r = parseInt(c.slice(0, 2), 16);
+    const g = parseInt(c.slice(2, 4), 16);
+    const b = parseInt(c.slice(4, 6), 16);
+    return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.6 ? '#111827' : '#ffffff';
+  }
+
+  // Wraps the finished code in a border, optionally with a captioned bar.
+  // Grows the canvas rather than shrinking the code, so the modules stay the
+  // size the user asked for and scannability is unaffected.
+  function applyFrame(canvas, bg) {
+    const style = $('qr-frame-style').value;
+    if (style === 'none') return;
+
+    const w = canvas.width;
+    const h = canvas.height;
+    const color = $('qr-frame-color').value;
+    const border = Math.max(3, Math.round(w * 0.018));
+    // Padding here is not cosmetic: the frame line has to sit outside the
+    // code's 4-module quiet zone or scanners cannot lock onto the pattern.
+    // Sized for the worst case — a short payload, whose few large modules make
+    // 4 modules a bigger absolute margin than a dense code needs.
+    const pad = Math.max(24, Math.round(w * 0.15));
+    const hasLabel = style === 'label-below' || style === 'label-above';
+    const labelH = hasLabel ? Math.max(30, Math.round(w * 0.135)) : 0;
+
+    const newW = w + (border + pad) * 2;
+    const newH = h + (border + pad) * 2 + labelH;
+
+    const snapshot = document.createElement('canvas');
+    snapshot.width = w;
+    snapshot.height = h;
+    snapshot.getContext('2d').drawImage(canvas, 0, 0);
+
+    canvas.width = newW;
+    canvas.height = newH;
+
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, newW, newH);
+
+    const radius = Math.round(newW * 0.05);
+
+    if (hasLabel) {
+      // Fill the caption bar, clipped to the rounded outline so its outer
+      // corners follow the frame instead of poking out square.
+      const barY = style === 'label-above' ? border : newH - border - labelH;
+      ctx.save();
+      roundRectPath(ctx, border / 2, border / 2, newW - border, newH - border, radius);
+      ctx.clip();
+      ctx.fillStyle = color;
+      ctx.fillRect(0, barY, newW, labelH);
+      ctx.restore();
+
+      const text = ($('qr-frame-text').value || 'SCAN ME').trim().toUpperCase();
+      ctx.fillStyle = contrastTextOn(color);
+      ctx.font = `700 ${Math.round(labelH * 0.4)}px Inter, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, newW / 2, barY + labelH / 2);
+    }
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = border;
+    roundRectPath(ctx, border / 2, border / 2, newW - border, newH - border, radius);
+    ctx.stroke();
+
+    ctx.drawImage(snapshot, border + pad, border + pad + (style === 'label-above' ? labelH : 0));
   }
 
   function getWatermarkTextColor(hex) {
