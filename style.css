@@ -484,6 +484,7 @@ input[type="text"],
 input[type="url"],
 input[type="email"],
 input[type="password"],
+input[type="datetime-local"],
 input[type="file"],
 textarea,
 select {
@@ -502,6 +503,7 @@ input[type="text"]:focus,
 input[type="url"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
+input[type="datetime-local"]:focus,
 textarea:focus,
 select:focus {
   outline: none;
@@ -1116,3 +1118,52 @@ input[type="range"] {
 }
 
 .seo-more a:hover { text-decoration: underline; }
+
+/* A two-column row nested inside a field group needs the same breathing room
+   the surrounding labels get. */
+.field-group .customize-grid { margin-top: 14px; }
+
+/* ---------- Use-case landing pages ---------- */
+.usecase { max-width: 820px; margin: 0 auto; padding: 8px 20px 40px; }
+.usecase h1 { font-family: "Plus Jakarta Sans", sans-serif; font-size: 2rem; margin: 0 0 14px; }
+.usecase .lede { color: var(--text-muted); font-size: 1.04rem; line-height: 1.6; margin: 0 0 30px; }
+.usecase h2 {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.3rem;
+  margin: 42px 0 14px;
+}
+.usecase h3 { font-size: 1rem; margin: 0 0 6px; }
+.usecase p, .usecase li { color: var(--text-muted); font-size: 0.95rem; line-height: 1.68; }
+.usecase strong { color: var(--text); }
+.usecase ol, .usecase ul { padding-left: 20px; }
+.usecase li { margin-bottom: 9px; }
+.usecase a { color: var(--accent-solid); }
+
+.usecase-cta {
+  margin: 32px 0;
+  padding: 26px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.usecase-cta p { margin: 0 0 16px; }
+.usecase-cta a.btn-cta {
+  display: inline-block;
+  padding: 13px 28px;
+  border-radius: 24px;
+  background: var(--accent-gradient);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.tip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px 26px;
+}
+.tip-grid p { margin: 0; }
+
+.usecase-links { margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--border); }
+.usecase-links p { margin: 0 0 8px; }

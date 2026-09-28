@@ -97,6 +97,11 @@
           <button class="type-btn" data-type="email">Email</button>
           <button class="type-btn" data-type="sms">SMS</button>
           <button class="type-btn" data-type="phone">Phone</button>
+          <button class="type-btn" data-type="whatsapp">WhatsApp</button>
+          <button class="type-btn" data-type="social">Social</button>
+          <button class="type-btn" data-type="location">Location</button>
+          <button class="type-btn" data-type="event">Event</button>
+          <button class="type-btn" data-type="review">Review</button>
         </div>
 
         <div class="fields" id="qr-fields">
@@ -157,6 +162,73 @@
           <div class="field-group hidden" data-for="phone">
             <label>Phone number</label>
             <input type="text" id="phone-number" placeholder="+1 555 123 4567">
+          </div>
+          <!-- WhatsApp -->
+          <div class="field-group hidden" data-for="whatsapp">
+            <label>Phone number (with country code)</label>
+            <input type="text" id="whatsapp-number" placeholder="+91 98765 43210">
+            <label>Pre-filled message (optional)</label>
+            <textarea id="whatsapp-message" rows="2" placeholder="Hi! I'd like to know more about…"></textarea>
+            <p class="hint">Scanning opens a WhatsApp chat with your number and the message ready to send.</p>
+          </div>
+          <!-- Social profile -->
+          <div class="field-group hidden" data-for="social">
+            <label>Platform</label>
+            <select id="social-platform">
+              <option value="instagram">Instagram</option>
+              <option value="facebook">Facebook</option>
+              <option value="x">X (Twitter)</option>
+              <option value="linkedin">LinkedIn</option>
+              <option value="tiktok">TikTok</option>
+              <option value="youtube">YouTube</option>
+              <option value="telegram">Telegram</option>
+              <option value="snapchat">Snapchat</option>
+            </select>
+            <label>Username</label>
+            <input type="text" id="social-username" placeholder="yourhandle">
+            <p class="hint">Just the username — no @ symbol and no full link.</p>
+          </div>
+          <!-- Location -->
+          <div class="field-group hidden" data-for="location">
+            <label>Address or place name</label>
+            <input type="text" id="location-query" placeholder="10 Downing Street, London">
+            <div class="customize-grid">
+              <div class="control">
+                <label>Latitude (optional)</label>
+                <input type="text" id="location-lat" placeholder="51.5034">
+              </div>
+              <div class="control">
+                <label>Longitude (optional)</label>
+                <input type="text" id="location-lng" placeholder="-0.1276">
+              </div>
+            </div>
+            <p class="hint">Opens the spot in Google Maps. Coordinates win over the address when both are filled in.</p>
+          </div>
+          <!-- Calendar event -->
+          <div class="field-group hidden" data-for="event">
+            <label>Event title</label>
+            <input type="text" id="event-title" placeholder="Product launch">
+            <label>Location (optional)</label>
+            <input type="text" id="event-location" placeholder="Conference room B">
+            <div class="customize-grid">
+              <div class="control">
+                <label>Starts</label>
+                <input type="datetime-local" id="event-start">
+              </div>
+              <div class="control">
+                <label>Ends</label>
+                <input type="datetime-local" id="event-end">
+              </div>
+            </div>
+            <label>Details (optional)</label>
+            <textarea id="event-description" rows="2" placeholder="What the event is about"></textarea>
+            <p class="hint">Scanning offers to add the event straight into the phone's calendar.</p>
+          </div>
+          <!-- Google review -->
+          <div class="field-group hidden" data-for="review">
+            <label>Google Place ID</label>
+            <input type="text" id="review-placeid" placeholder="ChIJN1t_tDeuEmsRUsoyG83frY4">
+            <p class="hint">Takes customers straight to the “write a review” box for your business. Find yours with Google's <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="noopener">Place ID finder</a>.</p>
           </div>
         </div>
 
@@ -389,6 +461,26 @@
         <h3>Plain text</h3>
         <p>Shows a short message on screen with nothing to click — useful for serial numbers, instructions, machine labels and stock references.</p>
       </div>
+      <div>
+        <h3>WhatsApp</h3>
+        <p>Opens a WhatsApp chat with your business, with a first message already typed. Popular on shop windows, delivery slips and market stalls where people would rather message than call.</p>
+      </div>
+      <div>
+        <h3>Social profile</h3>
+        <p>Sends people straight to your Instagram, Facebook, LinkedIn, TikTok, YouTube, X, Telegram or Snapchat profile — no searching for the right handle.</p>
+      </div>
+      <div>
+        <h3>Location</h3>
+        <p>Opens your address in Google Maps with directions one tap away. Works from a street address or exact coordinates, which is handy for venues, sites and units with no clear postal address.</p>
+      </div>
+      <div>
+        <h3>Calendar event</h3>
+        <p>Scanning offers to save the event — title, place, start and end time — straight into the phone's calendar. Good on event posters, invitations and tickets.</p>
+      </div>
+      <div>
+        <h3>Google review</h3>
+        <p>Drops customers directly into the "write a review" box for your business, skipping the search step that loses most people. Works well on receipts, tables and packaging.</p>
+      </div>
     </div>
 
     <h2>Barcode formats you can generate</h2>
@@ -425,6 +517,26 @@
         <p>Yes. Everything is generated inside your own browser. What you type is never uploaded, stored or tracked by us.</p>
       </div>
     </div>
+    <h2>Guides for common uses</h2>
+    <div class="seo-grid">
+      <div>
+        <h3><a href="wifi-qr-code.html">Wi-Fi QR codes</a></h3>
+        <p>Let guests join your network by scanning, and avoid the mistakes that make Wi-Fi codes fail silently.</p>
+      </div>
+      <div>
+        <h3><a href="qr-code-for-restaurant-menu.html">Restaurant menu QR codes</a></h3>
+        <p>Sizing table tents, why a web page beats a PDF, and how to change the menu without reprinting.</p>
+      </div>
+      <div>
+        <h3><a href="qr-code-for-business-cards.html">Business card QR codes</a></h3>
+        <p>Save your details into someone's phone in one tap, and what to leave out of a vCard.</p>
+      </div>
+      <div>
+        <h3><a href="google-review-qr-code.html">Google review QR codes</a></h3>
+        <p>Open the review box directly, find your Place ID, and stay inside Google's review policies.</p>
+      </div>
+    </div>
+
     <p class="seo-more"><a href="faq.html">Read all 20 questions — print sizes, scanning problems, error correction and barcode formats →</a></p>
   </section>
 

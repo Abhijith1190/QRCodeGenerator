@@ -488,6 +488,34 @@
     return str.replace(/([\\;,:"])/g, '\\$1');
   }
 
+  const SOCIAL_BASES = {
+    instagram: 'https://instagram.com/',
+    facebook: 'https://facebook.com/',
+    x: 'https://x.com/',
+    linkedin: 'https://linkedin.com/in/',
+    tiktok: 'https://tiktok.com/@',
+    youtube: 'https://youtube.com/@',
+    telegram: 'https://t.me/',
+    snapchat: 'https://snapchat.com/add/',
+  };
+
+  // "2026-09-28T14:30" -> "20260928T143000". Deliberately a floating local
+  // time (no trailing Z): the event should start at 2pm wherever it's scanned,
+  // not shift by the scanner's timezone.
+  function toICalDate(value) {
+    if (!value) return '';
+    const compact = value.replace(/[-:]/g, '');
+    return compact.length === 13 ? compact + '00' : compact;
+  }
+
+  function escapeICal(str) {
+    return String(str)
+      .replace(/\\/g, '\\\\')
+      .replace(/;/g, '\\;')
+      .replace(/,/g, '\\,')
+      .replace(/\r?\n/g, '\\n');
+  }
+
   function buildQrPayload() {
     switch (state.qrType) {
       case 'url': {
@@ -525,6 +553,46 @@
       case 'phone': {
         const num = $('phone-number').value || '';
         return `tel:${num}`;
+      }
+      case 'whatsapp': {
+        // wa.me wants digits only — no +, spaces or dashes.
+        const num = ($('whatsapp-number').value || '').replace(/\D/g, '');
+        if (!num) return '';
+        const msg = $('whatsapp-message').value || '';
+        return `https://wa.me/${num}${msg ? '?text=' + encodeURIComponent(msg) : ''}`;
+      }
+      case 'social': {
+        const user = ($('social-username').value || '').trim().replace(/^@/, '');
+        const base = SOCIAL_BASES[$('social-platform').value];
+        if (!user || !base) return '';
+        return base + encodeURIComponent(user);
+      }
+      case 'location': {
+        const lat = ($('location-lat').value || '').trim();
+        const lng = ($('location-lng').value || '').trim();
+        const query = lat && lng ? `${lat},${lng}` : ($('location-query').value || '').trim();
+        if (!query) return '';
+        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+      }
+      case 'event': {
+        const title = ($('event-title').value || '').trim();
+        if (!title) return '';
+        const location = ($('event-location').value || '').trim();
+        const description = ($('event-description').value || '').trim();
+        const start = toICalDate($('event-start').value);
+        const end = toICalDate($('event-end').value);
+        let out = 'BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\n';
+        out += `SUMMARY:${escapeICal(title)}\n`;
+        if (location) out += `LOCATION:${escapeICal(location)}\n`;
+        if (description) out += `DESCRIPTION:${escapeICal(description)}\n`;
+        if (start) out += `DTSTART:${start}\n`;
+        if (end) out += `DTEND:${end}\n`;
+        return out + 'END:VEVENT\nEND:VCALENDAR';
+      }
+      case 'review': {
+        const id = ($('review-placeid').value || '').trim();
+        if (!id) return '';
+        return `https://search.google.com/local/writereview?placeid=${encodeURIComponent(id)}`;
       }
       default:
         return '';
@@ -992,6 +1060,16 @@
       downloadCanvasPng(canvas, filename);
     };
     img.src = url;
+  }
+
+  // Use-case landing pages link straight to the relevant tab (e.g. /?type=wifi).
+  // Matched by comparing against the buttons that exist rather than building a
+  // selector from the query string.
+  const requestedType = new URLSearchParams(window.location.search).get('type');
+  if (requestedType) {
+    document.querySelectorAll('.type-btn').forEach((b) => {
+      if (b.dataset.type === requestedType) b.click();
+    });
   }
 
   // Initial render
