@@ -1,0 +1,21 @@
+# The host serves CSS/JS with a 7-day Cache-Control by default, which meant
+# visitors kept running fresh HTML against a week-old app.js — new UI appeared
+# but the matching logic was missing. Asset URLs now carry a ?v= token that is
+# bumped on release, and these headers stop a stale copy lingering for a week
+# when that token is ever forgotten.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css)$">
+    Header set Cache-Control "public, max-age=3600, must-revalidate"
+  </FilesMatch>
+
+  # HTML must always be revalidated, otherwise a cached page would keep
+  # requesting the old ?v= token and defeat the cache busting entirely.
+  <FilesMatch "\.(html)$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+
+  # Fingerprinted-by-content, safe to cache hard.
+  <FilesMatch "\.(png|jpg|jpeg|gif|svg|webp|woff2?)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>

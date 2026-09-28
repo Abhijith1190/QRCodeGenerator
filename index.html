@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=20260928b">
 <script>
   (function () {
     try {
@@ -235,10 +235,16 @@
         <button type="button" class="btn btn-primary btn-generate btn-generate-top" id="qr-generate-btn">Generate QR Code</button>
 
         <div class="customize">
-          <h3>Customize</h3>
+          <div class="cz-tabs" role="tablist" aria-label="Customise">
+            <button type="button" class="cz-tab active" data-cz="design" role="tab" aria-selected="true">Design</button>
+            <button type="button" class="cz-tab" data-cz="shape" role="tab" aria-selected="false">Shape</button>
+            <button type="button" class="cz-tab" data-cz="frame" role="tab" aria-selected="false">Frame &amp; logo</button>
+            <button type="button" class="cz-tab" data-cz="advanced" role="tab" aria-selected="false">Advanced</button>
+          </div>
 
-          <label class="label-with-badge">Colorful presets <span class="lock-badge" id="presets-lock-badge">🔒 Sign in</span></label>
-          <div class="preset-row is-locked" id="qr-presets">
+          <div class="cz-panel active" data-cz="design">
+            <label class="label-with-badge">Colorful presets <span class="lock-badge" id="presets-lock-badge">🔒 Sign in</span></label>
+            <div class="preset-row is-locked" id="qr-presets">
             <button type="button" class="preset-swatch" data-preset="classic" style="background:#000000" title="Classic black"></button>
             <button type="button" class="preset-swatch" data-preset="sunset" style="background:linear-gradient(135deg,#ff5f6d,#ffc371)" title="Sunset — sign in to use"></button>
             <button type="button" class="preset-swatch" data-preset="ocean" style="background:linear-gradient(135deg,#00c6ff,#0072ff)" title="Ocean — sign in to use"></button>
@@ -251,124 +257,135 @@
             <button type="button" class="preset-swatch" data-preset="rose" style="background:linear-gradient(135deg,#f43f5e,#be123c)" title="Rose — sign in to use"></button>
             <button type="button" class="preset-swatch" data-preset="slate" style="background:#334155" title="Slate — sign in to use"></button>
             <button type="button" class="preset-swatch" data-preset="neon" style="background:linear-gradient(135deg,#22c55e,#06b6d4)" title="Neon — sign in to use"></button>
+            </div>
+
+            <div class="customize-grid">
+              <div class="control">
+                <label class="label-with-badge">Color mode <span class="lock-badge" id="color-mode-lock-badge">🔒 Sign in</span></label>
+                <select id="qr-color-mode">
+                  <option value="solid" selected>Solid color</option>
+                  <option value="gradient" id="qr-gradient-option">Gradient (sign in)</option>
+                </select>
+              </div>
+              <div class="control">
+                <label>Background</label>
+                <input type="color" id="qr-bg" value="#ffffff">
+              </div>
+              <div class="control" id="qr-fg-solid-control">
+                <label>Dot color</label>
+                <input type="color" id="qr-fg" value="#000000">
+              </div>
+              <div class="control hidden" id="qr-fg-gradient-type-control">
+                <label>Gradient shape</label>
+                <select id="qr-gradient-type">
+                  <option value="linear" selected>Linear</option>
+                  <option value="radial">Radial</option>
+                </select>
+              </div>
+              <div class="control hidden" id="qr-gradient-c1-control">
+                <label>Gradient color 1</label>
+                <input type="color" id="qr-gradient-c1" value="#ff5f6d">
+              </div>
+              <div class="control hidden" id="qr-gradient-c2-control">
+                <label>Gradient color 2</label>
+                <input type="color" id="qr-gradient-c2" value="#ffc371">
+              </div>
+              <div class="control hidden" id="qr-gradient-rotation-control">
+                <label>Gradient angle</label>
+                <input type="range" id="qr-gradient-rotation" min="0" max="360" step="5" value="45">
+                <span class="range-val" id="qr-gradient-rotation-val">45°</span>
+              </div>
+            </div>
           </div>
 
-          <div class="customize-grid">
-            <div class="control">
-              <label>Dot pattern</label>
-              <select id="qr-dot-style">
-                <option value="square">Square</option>
-                <option value="dots">Dots</option>
-                <option value="rounded" selected>Rounded</option>
-                <option value="classy">Classy</option>
-                <option value="classy-rounded">Classy rounded</option>
-                <option value="extra-rounded">Extra rounded</option>
-              </select>
-            </div>
-            <div class="control">
-              <label class="label-with-badge">Color mode <span class="lock-badge" id="color-mode-lock-badge">🔒 Sign in</span></label>
-              <select id="qr-color-mode">
-                <option value="solid" selected>Solid color</option>
-                <option value="gradient" id="qr-gradient-option">Gradient (sign in)</option>
-              </select>
-            </div>
-
-            <div class="control" id="qr-fg-solid-control">
-              <label>Dot color</label>
-              <input type="color" id="qr-fg" value="#000000">
-            </div>
-            <div class="control hidden" id="qr-fg-gradient-type-control">
-              <label>Gradient shape</label>
-              <select id="qr-gradient-type">
-                <option value="linear" selected>Linear</option>
-                <option value="radial">Radial</option>
-              </select>
-            </div>
-            <div class="control hidden" id="qr-gradient-c1-control">
-              <label>Gradient color 1</label>
-              <input type="color" id="qr-gradient-c1" value="#ff5f6d">
-            </div>
-            <div class="control hidden" id="qr-gradient-c2-control">
-              <label>Gradient color 2</label>
-              <input type="color" id="qr-gradient-c2" value="#ffc371">
-            </div>
-            <div class="control hidden" id="qr-gradient-rotation-control">
-              <label>Gradient angle</label>
-              <input type="range" id="qr-gradient-rotation" min="0" max="360" step="5" value="45">
-              <span class="range-val" id="qr-gradient-rotation-val">45°</span>
-            </div>
-
-            <div class="control">
-              <label>Background</label>
-              <input type="color" id="qr-bg" value="#ffffff">
-            </div>
-            <div class="control">
-              <label>Size (px)</label>
-              <input type="range" id="qr-size" min="128" max="1024" step="32" value="320">
-              <span class="range-val" id="qr-size-val">320</span>
-            </div>
-            <div class="control">
-              <label>Error correction</label>
-              <select id="qr-ecl">
-                <option value="L">L — Low</option>
-                <option value="M" selected>M — Medium</option>
-                <option value="Q">Q — Quartile</option>
-                <option value="H">H — High (best with logo)</option>
-              </select>
-            </div>
-
-            <div class="control">
-              <label>Eye frame style</label>
-              <select id="qr-corner-square-style">
-                <option value="square">Square</option>
-                <option value="dot">Rounded</option>
-                <option value="extra-rounded" selected>Extra rounded</option>
-              </select>
-            </div>
-            <div class="control">
-              <label>Eye ball style</label>
-              <select id="qr-corner-dot-style">
-                <option value="square">Square</option>
-                <option value="dot" selected>Dot</option>
-              </select>
-            </div>
-
-            <div class="control span-2">
-              <label class="checkbox-label"><input type="checkbox" id="qr-corner-custom-color"> Use a different color for the eyes (corners) <span class="lock-badge" id="corner-lock-badge">🔒 Sign in</span></label>
-            </div>
-            <div class="control hidden" id="qr-corner-color-control">
-              <label>Eye color</label>
-              <input type="color" id="qr-corner-color" value="#1e3a8a">
-            </div>
-
-            <div class="control">
-              <label>Frame</label>
-              <select id="qr-frame-style">
-                <option value="none" selected>None</option>
-                <option value="border">Simple border</option>
-                <option value="label-below">Label below</option>
-                <option value="label-above">Label above</option>
-              </select>
-            </div>
-            <div class="control hidden" id="qr-frame-color-control">
-              <label>Frame color</label>
-              <input type="color" id="qr-frame-color" value="#111827">
-            </div>
-            <div class="control span-2 hidden" id="qr-frame-text-control">
-              <label>Frame label</label>
-              <input type="text" id="qr-frame-text" value="SCAN ME" maxlength="24">
-            </div>
-
-            <div class="control span-2">
-              <label>Upload image for center of QR code (optional)</label>
-              <div class="logo-upload-row">
-                <img id="qr-logo-preview" class="logo-preview hidden" alt="Logo preview">
-                <div class="logo-upload-controls">
-                  <input type="file" id="qr-logo" accept="image/*">
-                  <button class="mini-btn hidden" id="qr-logo-clear" type="button">Remove image</button>
-                </div>
+          <div class="cz-panel" data-cz="shape">
+            <div class="customize-grid">
+              <div class="control">
+                <label>Dot pattern</label>
+                <select id="qr-dot-style">
+                  <option value="square">Square</option>
+                  <option value="dots">Dots</option>
+                  <option value="rounded" selected>Rounded</option>
+                  <option value="classy">Classy</option>
+                  <option value="classy-rounded">Classy rounded</option>
+                  <option value="extra-rounded">Extra rounded</option>
+                </select>
               </div>
-              <p class="hint" id="qr-logo-hint"></p>
+              <div class="control">
+                <label>Eye frame style</label>
+                <select id="qr-corner-square-style">
+                  <option value="square">Square</option>
+                  <option value="dot">Rounded</option>
+                  <option value="extra-rounded" selected>Extra rounded</option>
+                </select>
+              </div>
+              <div class="control">
+                <label>Eye ball style</label>
+                <select id="qr-corner-dot-style">
+                  <option value="square">Square</option>
+                  <option value="dot" selected>Dot</option>
+                </select>
+              </div>
+              <div class="control hidden" id="qr-corner-color-control">
+                <label>Eye color</label>
+                <input type="color" id="qr-corner-color" value="#1e3a8a">
+              </div>
+              <div class="control span-2">
+                <label class="checkbox-label"><input type="checkbox" id="qr-corner-custom-color"> Use a different color for the eyes (corners) <span class="lock-badge" id="corner-lock-badge">🔒 Sign in</span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="cz-panel" data-cz="frame">
+            <div class="customize-grid">
+              <div class="control">
+                <label>Frame</label>
+                <select id="qr-frame-style">
+                  <option value="none" selected>None</option>
+                  <option value="border">Simple border</option>
+                  <option value="label-below">Label below</option>
+                  <option value="label-above">Label above</option>
+                </select>
+              </div>
+              <div class="control hidden" id="qr-frame-color-control">
+                <label>Frame color</label>
+                <input type="color" id="qr-frame-color" value="#111827">
+              </div>
+              <div class="control span-2 hidden" id="qr-frame-text-control">
+                <label>Frame label</label>
+                <input type="text" id="qr-frame-text" value="SCAN ME" maxlength="24">
+              </div>
+
+              <div class="control span-2">
+                <label>Upload image for center of QR code (optional)</label>
+                <div class="logo-upload-row">
+                  <img id="qr-logo-preview" class="logo-preview hidden" alt="Logo preview">
+                  <div class="logo-upload-controls">
+                    <input type="file" id="qr-logo" accept="image/*">
+                    <button class="mini-btn hidden" id="qr-logo-clear" type="button">Remove image</button>
+                  </div>
+                </div>
+                <p class="hint" id="qr-logo-hint"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="cz-panel" data-cz="advanced">
+            <div class="customize-grid">
+              <div class="control">
+                <label>Size (px)</label>
+                <input type="range" id="qr-size" min="128" max="1024" step="32" value="320">
+                <span class="range-val" id="qr-size-val">320</span>
+              </div>
+              <div class="control">
+                <label>Error correction</label>
+                <select id="qr-ecl">
+                  <option value="L">L — Low</option>
+                  <option value="M" selected>M — Medium</option>
+                  <option value="Q">Q — Quartile</option>
+                  <option value="H">H — High (best with logo)</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -635,10 +652,10 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-  <script src="config.js"></script>
-  <script src="profile-menu.js"></script>
+  <script src="config.js?v=20260928b"></script>
+  <script src="profile-menu.js?v=20260928b"></script>
   <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=20260928b"></script>
 </body>
 </html>

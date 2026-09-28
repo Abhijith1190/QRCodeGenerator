@@ -1167,3 +1167,42 @@ input[type="range"] {
 
 .usecase-links { margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--border); }
 .usecase-links p { margin: 0 0 8px; }
+
+/* ---------- Customize tabs ---------- */
+.cz-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  background: var(--surface-alt);
+}
+
+.cz-tab {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 6px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.cz-tab:hover { color: var(--text); }
+
+.cz-tab.active {
+  background: var(--surface);
+  color: var(--accent-solid);
+  box-shadow: var(--shadow-sm);
+}
+
+.cz-panel { display: none; }
+.cz-panel.active { display: block; }

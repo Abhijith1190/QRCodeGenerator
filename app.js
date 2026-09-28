@@ -630,6 +630,21 @@
     $('qr-corner-color-control').classList.toggle('hidden', !$('qr-corner-custom-color').checked);
   }
 
+  // Grouping the customise controls into tabs keeps the tool short enough that
+  // the preview stays reachable without a long scroll, especially on phones.
+  document.querySelectorAll('.cz-tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.cz-tab').forEach((t) => {
+        const on = t === tab;
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', String(on));
+      });
+      document.querySelectorAll('.cz-panel').forEach((panel) => {
+        panel.classList.toggle('active', panel.dataset.cz === tab.dataset.cz);
+      });
+    });
+  });
+
   function toggleFrameControls() {
     const style = $('qr-frame-style').value;
     $('qr-frame-color-control').classList.toggle('hidden', style === 'none');
