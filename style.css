@@ -155,6 +155,9 @@ body {
   right: 0;
   top: 50%;
   transform: translateY(-50%);
+  /* The transform above creates a stacking context, which would otherwise trap
+     the profile dropdown behind <main>. Kept below the modal/consent layers. */
+  z-index: 60;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -173,19 +176,125 @@ body {
 }
 
 .auth-area {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.auth-user {
-  font-size: 0.82rem;
+/* ---------- Signed-in profile menu ---------- */
+.avatar-btn {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent-gradient);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.avatar-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-solid) 25%, transparent);
+}
+
+.profile-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  z-index: 60;
+  width: 232px;
+  padding: 6px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.3);
+  text-align: left;
+}
+
+.profile-menu-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 10px 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.profile-email {
+  font-size: 0.8rem;
   color: var(--text-muted);
-  max-width: 140px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.profile-menu-group { padding: 2px 10px 10px; }
+
+.profile-menu-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--surface-alt);
+}
+
+.theme-options button {
+  padding: 6px 0;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.theme-options button:hover { color: var(--text); }
+
+.theme-options button.active {
+  background: var(--surface);
+  color: var(--accent-solid);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.profile-menu-item {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.profile-menu-item:hover { background: var(--surface-alt); }
+
+.profile-menu-item.danger { color: #dc2626; }
+.profile-menu-item.danger:hover { background: color-mix(in srgb, #dc2626 10%, transparent); }
 
 .btn-auth {
   padding: 9px 16px;
@@ -429,13 +538,22 @@ textarea { resize: vertical; }
 }
 
 .preset-swatch {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
   border: 2px solid var(--border);
   cursor: pointer;
   padding: 0;
+  overflow: hidden;
+  line-height: 0;
   transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Each swatch holds a real miniature QR rendered in that preset's style. */
+.preset-swatch canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .preset-swatch:hover {
@@ -675,9 +793,10 @@ input[type="range"] {
   vertical-align: middle;
 }
 
+/* Only a light dim when locked — the swatches are real style samples, so they
+   stay legible and the lock badge carries the "sign in" message. */
 .preset-row.is-locked {
-  opacity: 0.55;
-  filter: grayscale(0.3);
+  opacity: 0.9;
 }
 
 .preset-row.is-locked .preset-swatch {

@@ -30,13 +30,17 @@
   function renderAuthArea() {
     const area = $('auth-area');
     if (!area) return;
+    // Theme selection lives in the profile menu once signed in, so the
+    // standalone toggle would otherwise be a duplicate control.
+    const themeToggle = $('theme-toggle');
+    if (themeToggle) themeToggle.classList.toggle('hidden', isAuthed());
+
     if (isAuthed()) {
-      const badge = isPro() ? '<span class="pro-badge">PRO</span>' : '';
-      area.innerHTML = `
-        <span class="auth-user" title="${authState.user.email}">${authState.user.email}${badge}</span>
-        <button class="btn-auth" id="auth-logout-btn" type="button">Log out</button>
-      `;
-      $('auth-logout-btn').addEventListener('click', () => openLogoutModal());
+      window.renderProfileMenu(area, {
+        email: authState.user.email,
+        isPro: isPro(),
+        onLogout: () => openLogoutModal(),
+      });
     } else {
       area.innerHTML = `<button class="btn-auth" id="auth-open-btn" type="button">Sign in</button>`;
       $('auth-open-btn').addEventListener('click', () => openAuthModal());

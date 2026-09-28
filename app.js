@@ -43,13 +43,17 @@
   function renderAuthArea() {
     const area = $$('auth-area');
     if (!area) return;
+    // Theme selection lives in the profile menu once signed in, so the
+    // standalone toggle would otherwise be a duplicate control.
+    const themeToggle = $$('theme-toggle');
+    if (themeToggle) themeToggle.classList.toggle('hidden', isAuthed());
+
     if (isAuthed()) {
-      const badge = isPro() ? '<span class="pro-badge">PRO</span>' : '';
-      area.innerHTML = `
-        <span class="auth-user" title="${authState.user.email}">${authState.user.email}${badge}</span>
-        <button class="btn-auth" id="auth-logout-btn" type="button">Log out</button>
-      `;
-      $$('auth-logout-btn').addEventListener('click', () => openLogoutModal());
+      window.renderProfileMenu(area, {
+        email: authState.user.email,
+        isPro: isPro(),
+        onLogout: () => openLogoutModal(),
+      });
     } else {
       area.innerHTML = `<button class="btn-auth" id="auth-open-btn" type="button">Sign in</button>`;
       $$('auth-open-btn').addEventListener('click', () => openAuthModal());
@@ -603,6 +607,50 @@
     });
   });
 
+  // Since generating now takes an explicit click, each swatch renders a real
+  // miniature QR in its own style so the design is visible before choosing.
+  // Short data + low error correction keeps the module grid readable at 56px.
+  function renderPresetThumbnails() {
+    if (typeof QRCodeStyling === 'undefined') return;
+    document.querySelectorAll('#qr-presets .preset-swatch').forEach((btn) => {
+      const p = PRESETS[btn.dataset.preset];
+      if (!p) return;
+
+      const colorOptions = p.mode === 'gradient'
+        ? {
+            gradient: {
+              type: p.gradientType,
+              rotation: (p.rotation * Math.PI) / 180,
+              colorStops: [
+                { offset: 0, color: p.c1 },
+                { offset: 1, color: p.c2 },
+              ],
+            },
+          }
+        : { color: p.fg };
+      const cornerOptions = p.cornerCustom ? { color: p.cornerColor } : colorOptions;
+
+      try {
+        const thumb = new QRCodeStyling({
+          width: 56,
+          height: 56,
+          type: 'canvas',
+          data: 'EQG',
+          margin: 2,
+          qrOptions: { errorCorrectionLevel: 'L' },
+          backgroundOptions: { color: '#ffffff' },
+          dotsOptions: Object.assign({ type: p.dotStyle }, colorOptions),
+          cornersSquareOptions: Object.assign({ type: p.cornerSquare }, cornerOptions),
+          cornersDotOptions: Object.assign({ type: p.cornerDot }, cornerOptions),
+        });
+        btn.innerHTML = '';
+        thumb.append(btn);
+      } catch (e) {
+        // Leave the flat colour/gradient background as the fallback.
+      }
+    });
+  }
+
   // Manually tweaking a style control invalidates the "active" preset badge.
   const STYLE_CONTROL_IDS = [
     'qr-dot-style', 'qr-color-mode', 'qr-fg', 'qr-gradient-type', 'qr-gradient-c1',
@@ -948,4 +996,5 @@
 
   // Initial render
   render();
+  renderPresetThumbnails();
 })();
