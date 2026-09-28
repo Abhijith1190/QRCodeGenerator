@@ -1059,3 +1059,60 @@ input[type="range"] {
   padding: 10px;
   font-size: 0.85rem;
 }
+
+/* ---------- SEO content section ---------- */
+.seo-content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 10px 20px 20px;
+}
+
+.seo-content h2 {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.4rem;
+  margin: 42px 0 16px;
+}
+
+.seo-content h3 {
+  font-size: 1rem;
+  margin: 0 0 6px;
+}
+
+.seo-content p,
+.seo-content li {
+  color: var(--text-muted);
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+
+.seo-content strong { color: var(--text); }
+
+.steps {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.steps li { margin-bottom: 10px; }
+
+.seo-grid,
+.seo-faq {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px 28px;
+}
+
+.seo-grid p,
+.seo-faq p { margin: 0; }
+
+.seo-more {
+  margin-top: 26px;
+  font-size: 0.94rem;
+}
+
+.seo-more a {
+  color: var(--accent-solid);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.seo-more a:hover { text-decoration: underline; }
