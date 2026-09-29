@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wi-Fi QR Code Generator — Share Your Network Without the Password</title>
+<meta name="description" content="Create a free Wi-Fi QR code so guests join your network by scanning instead of typing the password. Works with WPA/WPA2, WEP and open networks. No sign-up.">
+<link rel="canonical" href="https://ezyqrgen.com/wifi-qr-code.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://ezyqrgen.com/wifi-qr-code.html">
+<meta property="og:title" content="Wi-Fi QR Code Generator — Free, No Sign-Up">
+<meta property="og:description" content="Create a free Wi-Fi QR code so guests join your network by scanning instead of typing the password. Works with WPA/WPA2, WEP and open networks. No sign-up.">
+<meta property="og:image" content="https://ezyqrgen.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="EzyQRGen">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Wi-Fi QR Code Generator — Free, No Sign-Up">
+<meta name="twitter:description" content="Create a free Wi-Fi QR code so guests join your network by scanning instead of typing the password. Works with WPA/WPA2, WEP and open networks. No sign-up.">
+<meta name="twitter:image" content="https://ezyqrgen.com/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236366f1'/%3E%3Cstop offset='1' stop-color='%23ec4899'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Crect x='6' y='6' width='8' height='8' rx='2' fill='white'/%3E%3Crect x='18' y='6' width='8' height='8' rx='2' fill='white'/%3E%3Crect x='6' y='18' width='8' height='8' rx='2' fill='white'/%3E%3Crect x='19' y='19' width='6' height='6' rx='1.5' fill='white'/%3E%3C/svg%3E">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7695383097201624" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=20260928d">
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('codeforge-theme');
+      if (saved === 'dark' || saved === 'light') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+    } catch (e) {}
+  })();
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to create a Wi-Fi QR code",
+  "description": "Create a free Wi-Fi QR code so guests join your network by scanning instead of typing the password. Works with WPA/WPA2, WEP and open networks. No sign-up.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Open the Wi-Fi tab",
+      "text": "Choose the Wi-Fi option in the generator."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Enter the network name",
+      "text": "Type the SSID exactly as it appears in the phone’s Wi-Fi list, including capital letters."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Pick the security type",
+      "text": "Choose WPA/WPA2 for almost all modern routers, WEP for very old ones, or None for an open network."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Enter the password",
+      "text": "Type the Wi-Fi password. It is encoded into the pattern inside your browser and never uploaded."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Generate and test",
+      "text": "Click Generate, download the PNG, then scan it with a phone that is not already on the network to confirm it joins."
+    }
+  ]
+}
+</script>
+</head>
+<body>
+  <div class="bg-decor" aria-hidden="true"></div>
+
+  <header class="topbar" id="topbar">
+    <div class="topbar-inner">
+      <a href="/" class="brand" style="text-decoration:none;">
+        <span class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="26" height="26">
+            <rect x="2" y="2" width="10" height="10" rx="2.5"></rect>
+            <rect x="20" y="2" width="10" height="10" rx="2.5"></rect>
+            <rect x="2" y="20" width="10" height="10" rx="2.5"></rect>
+            <rect x="21.5" y="21.5" width="7" height="7" rx="1.5"></rect>
+          </svg>
+        </span>
+        <span class="brand-name">EzyQRGen</span>
+      </a>
+      <nav class="topnav">
+        <a href="/wifi-qr-code.html" class="current">Guides</a>
+        <a href="/faq.html">FAQ</a>
+        <a href="/pricing.html">Pricing</a>
+      </nav>
+      <div class="topbar-actions">
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle dark mode">
+          <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="4.5"></circle><g stroke-width="2" stroke-linecap="round"><line x1="12" y1="1.5" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22.5"></line><line x1="1.5" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22.5" y2="12"></line><line x1="4.6" y1="4.6" x2="6.3" y2="6.3"></line><line x1="17.7" y1="17.7" x2="19.4" y2="19.4"></line><line x1="4.6" y1="19.4" x2="6.3" y2="17.7"></line><line x1="17.7" y1="6.3" x2="19.4" y2="4.6"></line></g></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"></path></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="usecase">
+    <h1>Wi-Fi QR code generator</h1>
+    <p class="lede">Let guests onto your network by scanning a square instead of squinting at a password written on a chalkboard. It works on any modern iPhone or Android camera, with nothing to install.</p>
+
+    <div class="usecase-cta">
+      <p>Make a Wi-Fi code now — free, no account, nothing leaves your browser.</p>
+      <a class="btn-cta" href="/?type=wifi">Create a Wi-Fi QR code</a>
+    </div>
+
+    <h2>How to create a Wi-Fi QR code</h2>
+    <ol>
+      <li><strong>Open the Wi-Fi tab</strong> in the generator.</li>
+      <li><strong>Enter the network name (SSID)</strong> exactly as it appears in the phone's Wi-Fi list.</li>
+      <li><strong>Pick the security type</strong> — WPA/WPA2 for almost every modern router, WEP only for very old equipment, or None for an open network.</li>
+      <li><strong>Enter the password.</strong> It is turned into the pattern inside your own browser and never sent to a server.</li>
+      <li><strong>Generate, download and test it</strong> with a phone that is not already on the network.</li>
+    </ol>
+
+    <h2>The mistakes that stop it working</h2>
+    <div class="tip-grid">
+      <div>
+        <h3>Capital letters in the network name</h3>
+        <p>SSIDs are case sensitive. "CafeGuest" and "cafeguest" are different networks, and a mismatch fails silently — the phone simply never connects.</p>
+      </div>
+      <div>
+        <h3>Wrong security type</h3>
+        <p>Picking WEP when the router runs WPA2 produces a code that scans fine and then refuses to join. If in doubt, check the router's admin page or the label on its underside.</p>
+      </div>
+      <div>
+        <h3>Testing on a phone already connected</h3>
+        <p>A device that already knows the network will look like a success whatever the code says. Always test on a phone that has never joined, or make it forget the network first.</p>
+      </div>
+      <div>
+        <h3>Printing it too small</h3>
+        <p>A Wi-Fi password makes a denser pattern than a short link. Give it at least 4cm across on a table card, and more if it will sit on a wall.</p>
+      </div>
+    </div>
+
+    <h2>Where a Wi-Fi code earns its keep</h2>
+    <p><strong>Cafés and restaurants</strong> — a small card on each table stops staff reciting the password twenty times a shift. <strong>Holiday lets and spare rooms</strong> — put it in the welcome folder and guests are online before they have unpacked. <strong>Offices and reception areas</strong> — a guest network code by the front desk saves interrupting whoever knows the password. <strong>Events and venues</strong> — print it on the badge or the back of the programme.</p>
+
+    <h2>Is it safe to put your Wi-Fi password on a wall?</h2>
+    <p>Anyone who can see the code can join the network, exactly as if they had read the password off a whiteboard. That is fine for a network you are happy for visitors to use, and the usual advice applies: put guests on a separate guest network rather than the one your own computers, till system or NAS sit on. Most routers offer a guest network in a couple of clicks.</p>
+    <p>What does <em>not</em> happen is your password travelling across the internet. The code is built inside your browser, so the password never reaches us or anyone else.</p>
+
+
+    <div class="usecase-cta">
+      <p>Make a Wi-Fi code now — free, no account, nothing leaves your browser.</p>
+      <a class="btn-cta" href="/?type=wifi">Create a Wi-Fi QR code</a>
+    </div>
+
+    <div class="usecase-links">
+      <p><strong>More guides</strong></p>
+      <p><a href="/qr-code-for-restaurant-menu.html">QR codes for restaurant menus</a> · <a href="/qr-code-for-business-cards.html">QR codes for business cards</a> · <a href="/google-review-qr-code.html">Google review QR codes</a> · <a href="/faq.html">Full FAQ</a></p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>Runs entirely in your browser — nothing you enter is uploaded anywhere.</p>
+    <p><a href="/">Generator</a> · <a href="/faq.html">FAQ</a> · <a href="/pricing.html">Pricing</a> · <a href="/privacy.html">Privacy Policy</a></p>
+  </footer>
+
+  <script>
+    var btn = document.getElementById('theme-toggle');
+    btn.addEventListener('click', function () {
+      var root = document.documentElement;
+      var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var currentlyDark = root.getAttribute('data-theme') ? root.getAttribute('data-theme') === 'dark' : systemDark;
+      var next = currentlyDark ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('codeforge-theme', next); } catch (e) {}
+    });
+  </script>
+</body>
+</html>
